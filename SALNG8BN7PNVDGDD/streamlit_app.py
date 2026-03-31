@@ -55,7 +55,7 @@ if ingredients_list:
     for fruit_chosen in ingredients_list:
         ingredients_string += fruit_chosen + ' '
         # Use Our fruit_chosen Variable in the API Call
-        st.subheader(fruit_chosen + 'Nutrition Information')
+        st.subheader(fruit_chosen + ' Nutrition Information')
         search_term = (
             my_dataframe
             .filter(col("FRUIT_NAME") == fruit_chosen)
