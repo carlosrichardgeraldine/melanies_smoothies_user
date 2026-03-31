@@ -23,30 +23,45 @@ def create_session():
 
 session = create_session()
 
-my_dataframe = session.table("smoothies.public.fruit_options").select(col("FRUIT_NAME"))
-#st.dataframe(data=my_dataframe, use_container_width=True)
+# my_dataframe = session.table("smoothies.public.fruit_options").select(col("FRUIT_NAME"))
+my_dataframe = session.table("smoothies.public.fruit_options") \
+                      .select(col("FRUIT_NAME"), col("SEARCH_ON"))
+
+# st.dataframe(data=my_dataframe, use_container_width=True)
 
 ingredients_list = st.multiselect(
     'Choose up to 5 ingredients:',
-    my_dataframe
+    my_dataframe["FRUIT_NAME"].to_pandas().values.tolist()
 )
 
 if ingredients_list:
     ingredients_string = ''
 
+    # for fruit_chosen in ingredients_list:
+    #     ingredients_string += fruit_chosen + ' '
+    #     # Use Our fruit_chosen Variable in the API Call
+    #     st.subheader(fruit_chosen + 'Nutrition Information')
+
+    #     # SmoothieFroot API call for each fruit
+    #     url = f"https://my.smoothiefroot.com/api/fruit/{fruit_chosen}"
+    #     smoothiefroot_response = requests.get(url)
+
+    #     st.dataframe(
+    #         data=smoothiefroot_response.json(),
+    #         use_container_width=True
+    #     )
     for fruit_chosen in ingredients_list:
-        ingredients_string += fruit_chosen + ' '
-        # Use Our fruit_chosen Variable in the API Call
-        st.subheader(fruit_chosen + 'Nutrition Information')
-
-        # SmoothieFroot API call for each fruit
-        url = f"https://my.smoothiefroot.com/api/fruit/{fruit_chosen}"
-        smoothiefroot_response = requests.get(url)
-
-        st.dataframe(
-            data=smoothiefroot_response.json(),
-            use_container_width=True
+        search_term = (
+            my_dataframe
+            .filter(col("FRUIT_NAME") == fruit_chosen)
+            .select(col("SEARCH_ON"))
+            .collect()[0][0]
         )
+    
+        url = f"https://my.smoothiefroot.com/api/fruit/{search_term}"
+        response = requests.get(url)
+    
+        st.dataframe(response.json(), use_container_width=True)
 
     my_insert_stmt = f"""
         insert into smoothies.public.orders(ingredients, name_on_order)
