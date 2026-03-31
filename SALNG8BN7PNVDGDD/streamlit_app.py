@@ -51,3 +51,5 @@ if ingredients_list:
 smoothiefroot_response = requests.get(
     "https://my.smoothiefroot.com/api/fruit/watermelon"
 )
+
+st.json(smoothiefroot_response.json())
