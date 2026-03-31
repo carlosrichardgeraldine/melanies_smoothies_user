@@ -53,3 +53,8 @@ smoothiefroot_response = requests.get(
 )
 
 st.json(smoothiefroot_response.json())
+
+sf_df = st.dataframe(
+    data=smoothiefroot_response.json(),
+    use_container_width=True
+)
