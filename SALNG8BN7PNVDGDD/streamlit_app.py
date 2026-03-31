@@ -53,6 +53,9 @@ if ingredients_list:
     #         use_container_width=True
     #     )
     for fruit_chosen in ingredients_list:
+        ingredients_string += fruit_chosen + ' '
+        # Use Our fruit_chosen Variable in the API Call
+        st.subheader(fruit_chosen + 'Nutrition Information')
         search_term = (
             my_dataframe
             .filter(col("FRUIT_NAME") == fruit_chosen)
@@ -70,7 +73,7 @@ if ingredients_list:
         values ('{ingredients_string}', '{name_on_order}')
     """
 
-    st.write(my_insert_stmt)
+    # st.write(my_insert_stmt)
 
     time_to_insert = st.button('Submit Order')
 
